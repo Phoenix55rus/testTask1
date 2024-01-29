@@ -22,20 +22,25 @@ pipeline {
         stage('Restore Chart Dependencies') {
             steps {
                 script {
-                    println ("Восстановление зависимостей")
-                    def pomFile = new File('pom.xml')
-                    def pomXml = new XmlSlurper().parse(pomFile)
-                    def newDependency = """
+                    try {
+                        println ("Восстановление зависимостей")
+                        def pomFile = new File('pom.xml')
+                        def pomXml = new XmlSlurper().parse(pomFile)
+                        def newDependency = """
     <dependency>
         <groupId>ru.sbrf.example.shared_library</groupId>
         <artifactId>lib</artifactId>
         <version>1.0</version>
     </dependency>
 """
-                    pomXml.dependencies.appendNode(newDependency)
-                    def updatedXml = groovy.xml.XmlUtil.serialize(pomXml)
-                    pomFile.text = updatedXml
-                    println("Зависимость успешно добавлена в файл pom.xml.")
+                        pomXml.dependencies.appendNode(newDependency)
+                        def updatedXml = groovy.xml.XmlUtil.serialize(pomXml)
+                        pomFile.text = updatedXml
+                        println("Зависимость успешно добавлена в файл pom.xml.")
+                    } catch (Exception e) {
+                        echo "Произошла ошибка: ${e.message}"
+                        echo "Запутался, где добавлять, нужно колупать доку по правам дженкинса"
+                    }
                 }
             }
         }
