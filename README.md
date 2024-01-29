@@ -1,2 +1,1 @@
-# testTask1
-testTask
+ansible-playbook jenkins_deploy.yml

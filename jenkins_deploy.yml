@@ -1,0 +1,19 @@
+---
+- name: Deploy Jenkins in Docker
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Ensure Docker is installed
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Ensure Docker Compose is installed
+      shell: >
+        test -f /usr/local/bin/docker-compose || (curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose)
+      args:
+        executable: /bin/bash
+
+    - name: Start Jenkins container
+      docker_compose:
+        project_src: docker-compose.yml
