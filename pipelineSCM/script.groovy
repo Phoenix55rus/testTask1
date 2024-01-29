@@ -9,11 +9,13 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                echo "Клонирую репозиторй из ${params.repoPath}"
-                if (params.repoPath.empty) {
-                        error "Не указан путь до репозитория с чартами. Укажите параметр repoPath."
-                    }
-                checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: "${params.repoPath}"]], branches: [[name: '*/main']]]
+                script {
+                    echo "Клонирую репозиторй из ${params.repoPath}"
+                    if (params.repoPath.empty) {
+                            error "Не указан путь до репозитория с чартами. Укажите параметр repoPath."
+                        }
+                    checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: "${params.repoPath}"]], branches: [[name: '*/main']]]
+                }
             }
         }
 
